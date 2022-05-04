@@ -18,6 +18,10 @@ defmodule ThySupervisor do
     GenServer.call(supervisor, {:restart_child, pid, child_spec})
   end
 
+  def count_children(supervisor) do
+    GenServer.call(supervisor, :count_children)
+  end
+
   # Callback Functions
   def init([child_spec_list]) do
     Process.flag(:trap_exit, true)
@@ -62,6 +66,10 @@ defmodule ThySupervisor do
       _ ->
         {:reply, :ok, state}
     end
+  end
+
+  def handle_call(:count_children, _from, state) do
+    {:reply, map_size(state), state}
   end
 
   def handle_info({:EXIT, from, :killed}, state) do
