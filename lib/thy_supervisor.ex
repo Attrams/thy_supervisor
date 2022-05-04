@@ -43,6 +43,11 @@ defmodule ThySupervisor do
     end
   end
 
+  def handle_info({:EXIT, from, :killed}, state) do
+    new_state = state |> Map.delete(from)
+    {:noreply, new_state}
+  end
+
   # Private Functions
   defp start_children([child_spec | rest]) do
     case start_child(child_spec) do
